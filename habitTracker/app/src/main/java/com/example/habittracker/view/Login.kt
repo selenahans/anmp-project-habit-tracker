@@ -5,6 +5,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
+import android.widget.Toast
+import androidx.navigation.Navigation
 import com.example.habittracker.R
 
 // TODO: Rename parameter arguments, choose names that match
@@ -37,7 +41,24 @@ class Login : Fragment() {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_login, container, false)
     }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
+        val btnLogin = view.findViewById<Button>(R.id.btnLogin)
+        val txtUsername = view.findViewById<EditText>(R.id.txtUsername)
+        val txtPassword = view.findViewById<EditText>(R.id.txtPassword) 
+
+        btnLogin.setOnClickListener {
+            val username = txtUsername.text.toString()
+            val password = txtPassword.text.toString()
+            if (username == "student" && password == "123") {
+                val action = LoginDirections.actionLoginToDashboard()
+                Navigation.findNavController(it).navigate(action)
+            } else {
+                Toast.makeText(context, "Username atau Password Salah", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
     companion object {
         /**
          * Use this factory method to create a new instance of
