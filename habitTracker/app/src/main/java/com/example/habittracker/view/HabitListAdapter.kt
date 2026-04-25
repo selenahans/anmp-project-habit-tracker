@@ -28,7 +28,22 @@ class HabitListAdapter(val habitList:ArrayList<Model.Habit>)
             progressBar.max = goalValue
             progressBar.progress = currentProgressValue
             txtProgressRatio.text = "$currentProgressValue / $goalValue ${habit.unit ?: ""}"
-            if (currentProgressValue >= goalValue && goalValue > 0) {
+            btnPlus.setOnClickListener {
+                val currentPos = habit.currentProgress ?: 0
+                val maxGoal = habit.goal ?: 0
+                if (currentPos < maxGoal) {
+                    habit.currentProgress = currentPos + 1
+                    notifyItemChanged(position)
+                }
+            }
+            btnMinus.setOnClickListener {
+                val currentPos = habit.currentProgress ?: 0
+                if (currentPos > 0) {
+                    habit.currentProgress = currentPos - 1
+                    notifyItemChanged(position)
+                }
+            }
+            if (habit.currentProgress == goalValue) {
                 txtStatus.text = "Completed"
             } else {
                 txtStatus.text = "In Progress"
