@@ -46,7 +46,7 @@ class Login : Fragment() {
 
         val btnLogin = view.findViewById<Button>(R.id.btnLogin)
         val txtUsername = view.findViewById<EditText>(R.id.txtUsername)
-        val txtPassword = view.findViewById<EditText>(R.id.txtPassword) 
+        val txtPassword = view.findViewById<EditText>(R.id.txtPassword)
 
         btnLogin.setOnClickListener {
             val username = txtUsername.text.toString()
