@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.habittracker.R
 import com.example.habittracker.databinding.FragmentDashboardBinding
@@ -56,6 +57,10 @@ class Dashboard : Fragment() {
         binding.recViewHabits.adapter = habitListAdapter
 
         observeViewModel()
+        binding.btnAddHabit.setOnClickListener {
+            val action = DashboardDirections.actionDashboardToCreateHabit()
+            findNavController().navigate(action)
+        }
     }
     fun observeViewModel() {
         viewModel.habitsLD.observe(viewLifecycleOwner, Observer {
