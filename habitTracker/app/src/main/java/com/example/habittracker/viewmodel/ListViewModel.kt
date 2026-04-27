@@ -20,7 +20,7 @@ class ListViewModel : ViewModel(){
                 8,
                 3,
                 "glasses",
-                "water_drop_icon"
+                "Water"
             ),
             Model.Habit(
                 "2",
@@ -29,7 +29,7 @@ class ListViewModel : ViewModel(){
                 30,
                 15,
                 "minutes",
-                "run_icon"
+                "Run"
             ),
             Model.Habit(
                 "3",
@@ -38,7 +38,7 @@ class ListViewModel : ViewModel(){
                 20,
                 5,
                 "pages",
-                "book_icon"
+                "Books"
             )
         )
 

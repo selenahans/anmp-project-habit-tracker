@@ -1,8 +1,10 @@
 package com.example.habittracker.view
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.habittracker.R
 import com.example.habittracker.databinding.HabitListItemBinding
 import com.example.habittracker.model.Model
 
@@ -28,6 +30,14 @@ class HabitListAdapter(val habitList:ArrayList<Model.Habit>)
             progressBar.max = goalValue
             progressBar.progress = currentProgressValue
             txtProgressRatio.text = "$currentProgressValue / $goalValue ${habit.unit ?: ""}"
+
+            val image = holder.itemView.context.resources.getIdentifier(
+                habit.icon?.toLowerCase(),
+                "drawable",
+                holder.itemView.context.packageName
+            )
+            imageView.setImageResource(image)
+
             btnPlus.setOnClickListener {
                 val currentPos = habit.currentProgress ?: 0
                 val maxGoal = habit.goal ?: 0
@@ -45,8 +55,10 @@ class HabitListAdapter(val habitList:ArrayList<Model.Habit>)
             }
             if (habit.currentProgress == goalValue) {
                 txtStatus.text = "Completed"
+                txtStatus.setBackgroundColor(Color.parseColor("#BDFFB6"))
             } else {
                 txtStatus.text = "In Progress"
+                txtStatus.setBackgroundColor(Color.parseColor("#E8E7E7"))
             }
         }
     }
@@ -62,6 +74,4 @@ class HabitListAdapter(val habitList:ArrayList<Model.Habit>)
 
     class HabitViewHolder(var binding: HabitListItemBinding)
         :RecyclerView.ViewHolder(binding.root)
-
-
 }
