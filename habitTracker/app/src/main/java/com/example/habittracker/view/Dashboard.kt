@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.habittracker.R
 import com.example.habittracker.databinding.FragmentDashboardBinding
+import com.example.habittracker.viewmodel.HabitViewModel
 import com.example.habittracker.viewmodel.ListViewModel
 
 // TODO: Rename parameter arguments, choose names that match
@@ -24,7 +25,7 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class Dashboard : Fragment() {
-    private lateinit var viewModel: ListViewModel
+    private lateinit var viewModel: HabitViewModel
     private val habitListAdapter  = HabitListAdapter(arrayListOf())
     private lateinit var binding: FragmentDashboardBinding
 
@@ -50,13 +51,14 @@ class Dashboard : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = ViewModelProvider(this).get(ListViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(HabitViewModel::class.java)
         viewModel.refresh()
 
         binding.recViewHabits.layoutManager = LinearLayoutManager(context)
         binding.recViewHabits.adapter = habitListAdapter
 
         observeViewModel()
+
         binding.btnAddHabit.setOnClickListener {
             val action = DashboardDirections.actionDashboardToCreateHabit()
             findNavController().navigate(action)

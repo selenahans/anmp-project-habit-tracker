@@ -23,7 +23,7 @@ class HabitListAdapter(val habitList:ArrayList<Model.Habit>)
     override fun onBindViewHolder(holder: HabitViewHolder, position: Int) {
         val habit = habitList[position]
         with(holder.binding) {
-            txtTitle.text = habit.title
+            txtTitle.text = habit.name
             txtDesc.text = habit.description
             val goalValue = habit.goal ?: 0
             val currentProgressValue = habit.currentProgress ?: 0

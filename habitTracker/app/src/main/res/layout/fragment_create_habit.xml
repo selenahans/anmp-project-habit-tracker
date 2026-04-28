@@ -80,6 +80,7 @@
                             app:layout_constraintTop_toBottomOf="@+id/textInputLayout4">
 
                             <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/txtDescription"
                                 android:layout_width="358dp"
                                 android:layout_height="wrap_content"
                                 android:hint="Short Description*" />

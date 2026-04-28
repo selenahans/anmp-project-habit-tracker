@@ -5,7 +5,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import com.example.habittracker.R
+import com.example.habittracker.databinding.FragmentCreateHabitBinding
+import com.example.habittracker.model.Model
+import com.example.habittracker.viewmodel.HabitViewModel
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -21,6 +27,8 @@ class CreateHabit : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    private lateinit var binding: FragmentCreateHabitBinding
+    private lateinit var habitViewModel: HabitViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,9 +43,51 @@ class CreateHabit : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_create_habit, container, false)
-    }
+        binding = FragmentCreateHabitBinding.inflate(inflater, container, false)
 
+        habitViewModel = ViewModelProvider(this).get(HabitViewModel::class.java)
+
+        val icons = arrayOf(
+            "Biking",
+            "Books",
+            "Exercise",
+            "Laptop",
+            "Meditate",
+            "Music",
+            "Protein",
+            "Run",
+            "Salad",
+            "Water"
+        )
+        val iconAdapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_item,
+            icons
+        )
+        iconAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.spinner2.adapter = iconAdapter
+
+        binding.btnCreateHabit.setOnClickListener {
+            createHabit()
+        }
+
+        return binding.root
+    }
+    private fun createHabit() {
+        val name = binding.txtHabitName.text.toString()
+        val description = binding.txtDescription.text.toString()
+        val goals = binding.txtGoal.text.toString().toIntOrNull()
+        val unit = binding.txtUnit.text.toString()
+        val selectedIcon = binding.spinner2.selectedItem as? String
+
+        if (name.isEmpty() || description.isEmpty() || goals == null || selectedIcon == null) {
+            Toast.makeText(context, "Please fill in all fields", Toast.LENGTH_SHORT).show()
+        } else {
+            val newHabit = Model.Habit(name, description, goals, 0, unit, selectedIcon)
+            habitViewModel.saveHabit(newHabit)
+            Toast.makeText(context, "Habit Created", Toast.LENGTH_SHORT).show()
+        }
+    }
     companion object {
         /**
          * Use this factory method to create a new instance of

@@ -14,7 +14,6 @@ class ListViewModel : ViewModel(){
 
         habitsLD.value = arrayListOf(
             Model.Habit(
-                "1",
                 "Drink Water",
                 "Stay hydrated throughout the day",
                 8,
@@ -23,7 +22,6 @@ class ListViewModel : ViewModel(){
                 "Water"
             ),
             Model.Habit(
-                "2",
                 "Morning Jogging",
                 "Burn calories and stay fit",
                 30,
@@ -32,7 +30,6 @@ class ListViewModel : ViewModel(){
                 "Run"
             ),
             Model.Habit(
-                "3",
                 "Reading Book",
                 "Improve knowledge and focus",
                 20,
