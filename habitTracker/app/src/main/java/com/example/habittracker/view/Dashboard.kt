@@ -51,7 +51,7 @@ class Dashboard : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = ViewModelProvider(this).get(HabitViewModel::class.java)
+        viewModel = ViewModelProvider(requireActivity())[HabitViewModel::class.java]
         viewModel.refresh()
 
         binding.recViewHabits.layoutManager = LinearLayoutManager(context)

@@ -12,6 +12,7 @@ import com.example.habittracker.R
 import com.example.habittracker.databinding.FragmentCreateHabitBinding
 import com.example.habittracker.model.Model
 import com.example.habittracker.viewmodel.HabitViewModel
+import androidx.navigation.fragment.findNavController
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -45,7 +46,7 @@ class CreateHabit : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentCreateHabitBinding.inflate(inflater, container, false)
 
-        habitViewModel = ViewModelProvider(this).get(HabitViewModel::class.java)
+        habitViewModel = ViewModelProvider(requireActivity())[HabitViewModel::class.java]
 
         val icons = arrayOf(
             "Biking",
@@ -68,6 +69,7 @@ class CreateHabit : Fragment() {
         binding.spinner2.adapter = iconAdapter
 
         binding.btnCreateHabit.setOnClickListener {
+            binding.btnCreateHabit.isEnabled = false
             createHabit()
         }
 
@@ -82,10 +84,12 @@ class CreateHabit : Fragment() {
 
         if (name.isEmpty() || description.isEmpty() || goals == null || selectedIcon == null) {
             Toast.makeText(context, "Please fill in all fields", Toast.LENGTH_SHORT).show()
+            binding.btnCreateHabit.isEnabled = true
         } else {
             val newHabit = Model.Habit(name, description, goals, 0, unit, selectedIcon)
             habitViewModel.saveHabit(newHabit)
             Toast.makeText(context, "Habit Created", Toast.LENGTH_SHORT).show()
+            findNavController().popBackStack()
         }
     }
     companion object {
