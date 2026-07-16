@@ -4,56 +4,69 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.habittracker.R
 import com.example.habittracker.databinding.HabitListItemBinding
-import com.example.habittracker.model.Model
+import com.example.habittracker.model.Habit
 
-class HabitListAdapter(val habitList:ArrayList<Model.Habit>)
-    :RecyclerView.Adapter<HabitListAdapter.HabitViewHolder>()
-{
-    override fun onCreateViewHolder
-        (parent: ViewGroup, viewType: Int)
-    : HabitViewHolder {
+class HabitListAdapter(
+    private val habitList: ArrayList<Habit>
+) : RecyclerView.Adapter<HabitListAdapter.HabitViewHolder>() {
+
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): HabitViewHolder {
+
         val binding = HabitListItemBinding.inflate(
-            LayoutInflater.from(parent.context), parent, false)
-        return HabitViewHolder(binding)
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
 
+        return HabitViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: HabitViewHolder, position: Int) {
+
         val habit = habitList[position]
+
         with(holder.binding) {
+
             txtTitle.text = habit.name
             txtDesc.text = habit.description
-            val goalValue = habit.goal ?: 0
-            val currentProgressValue = habit.currentProgress ?: 0
-            progressBar.max = goalValue
-            progressBar.progress = currentProgressValue
-            txtProgressRatio.text = "$currentProgressValue / $goalValue ${habit.unit ?: ""}"
+
+            progressBar.max = habit.goal
+            progressBar.progress = habit.currentProgress
+
+            txtProgressRatio.text =
+                "${habit.currentProgress} / ${habit.goal} ${habit.unit}"
 
             val image = holder.itemView.context.resources.getIdentifier(
-                habit.icon?.toLowerCase(),
+                habit.icon.lowercase(),
                 "drawable",
                 holder.itemView.context.packageName
             )
+
             imageView.setImageResource(image)
 
             btnPlus.setOnClickListener {
-                val currentPos = habit.currentProgress ?: 0
-                val maxGoal = habit.goal ?: 0
-                if (currentPos < maxGoal) {
-                    habit.currentProgress = currentPos + 1
+
+                if (habit.currentProgress < habit.goal) {
+                    habit.currentProgress++
                     notifyItemChanged(position)
                 }
+
             }
+
             btnMinus.setOnClickListener {
-                val currentPos = habit.currentProgress ?: 0
-                if (currentPos > 0) {
-                    habit.currentProgress = currentPos - 1
+
+                if (habit.currentProgress > 0) {
+                    habit.currentProgress--
                     notifyItemChanged(position)
                 }
+
             }
-            if (habit.currentProgress == goalValue) {
+
+            if (habit.currentProgress == habit.goal) {
                 txtStatus.text = "Completed"
                 txtStatus.setBackgroundColor(Color.parseColor("#BDFFB6"))
             } else {
@@ -63,15 +76,15 @@ class HabitListAdapter(val habitList:ArrayList<Model.Habit>)
         }
     }
 
-    override fun getItemCount(): Int {
-        return habitList.size
-    }
-    fun updateHabitList(newHabitList: ArrayList<Model.Habit>) {
+    override fun getItemCount(): Int = habitList.size
+
+    fun updateHabitList(newHabitList: ArrayList<Habit>) {
         habitList.clear()
         habitList.addAll(newHabitList)
         notifyDataSetChanged()
     }
 
-    class HabitViewHolder(var binding: HabitListItemBinding)
-        :RecyclerView.ViewHolder(binding.root)
+    class HabitViewHolder(
+        val binding: HabitListItemBinding
+    ) : RecyclerView.ViewHolder(binding.root)
 }

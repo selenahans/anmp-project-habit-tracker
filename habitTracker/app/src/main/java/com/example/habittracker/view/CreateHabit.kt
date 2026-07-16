@@ -10,7 +10,7 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.example.habittracker.R
 import com.example.habittracker.databinding.FragmentCreateHabitBinding
-import com.example.habittracker.model.Model
+import com.example.habittracker.model.Habit
 import com.example.habittracker.viewmodel.HabitViewModel
 import androidx.navigation.fragment.findNavController
 
@@ -86,7 +86,14 @@ class CreateHabit : Fragment() {
             Toast.makeText(context, "Please fill in all fields", Toast.LENGTH_SHORT).show()
             binding.btnCreateHabit.isEnabled = true
         } else {
-            val newHabit = Model.Habit(name, description, goals, 0, unit, selectedIcon)
+            val newHabit = Habit(
+                name,
+                description,
+                goals,
+                0,
+                unit,
+                selectedIcon
+            )
             habitViewModel.saveHabit(newHabit)
             Toast.makeText(context, "Habit Created", Toast.LENGTH_SHORT).show()
             findNavController().popBackStack()

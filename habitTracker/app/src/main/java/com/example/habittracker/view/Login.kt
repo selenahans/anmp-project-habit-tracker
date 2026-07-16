@@ -1,28 +1,27 @@
 package com.example.habittracker.view
 
+import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import com.example.habittracker.R
+import com.example.habittracker.viewmodel.LoginViewModel
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [Login.newInstance] factory method to
- * create an instance of this fragment.
- */
 class Login : Fragment() {
-    // TODO: Rename and change types of parameters
+
+    private lateinit var viewModel: LoginViewModel
+
     private var param1: String? = null
     private var param2: String? = null
 
@@ -35,40 +34,53 @@ class Login : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_login, container, false)
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        viewModel = ViewModelProvider(this)[LoginViewModel::class.java]
+
+        // Auto Login
+        val pref = requireContext().getSharedPreferences("session", Context.MODE_PRIVATE)
+        if (pref.getBoolean("isLogin", false)) {
+            val action = LoginDirections.actionLoginToDashboard()
+            findNavController().navigate(action)
+            return
+        }
 
         val btnLogin = view.findViewById<Button>(R.id.btnLogin)
         val txtUsername = view.findViewById<EditText>(R.id.txtUsername)
         val txtPassword = view.findViewById<EditText>(R.id.txtPassword)
 
         btnLogin.setOnClickListener {
-            val username = txtUsername.text.toString()
-            val password = txtPassword.text.toString()
-            if (username == "student" && password == "123") {
+
+            val username = txtUsername.text.toString().trim()
+            val password = txtPassword.text.toString().trim()
+
+            if (viewModel.login(requireContext(), username, password)) {
+
                 val action = LoginDirections.actionLoginToDashboard()
                 Navigation.findNavController(it).navigate(action)
+
             } else {
-                Toast.makeText(context, "Username atau Password Salah", Toast.LENGTH_SHORT).show()
+
+                Toast.makeText(
+                    context,
+                    "Username atau Password Salah",
+                    Toast.LENGTH_SHORT
+                ).show()
+
             }
         }
     }
+
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment Login.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
             Login().apply {

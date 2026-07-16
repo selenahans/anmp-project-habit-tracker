@@ -13,6 +13,8 @@ import com.example.habittracker.R
 import com.example.habittracker.databinding.FragmentDashboardBinding
 import com.example.habittracker.viewmodel.HabitViewModel
 import com.example.habittracker.viewmodel.ListViewModel
+import com.example.habittracker.model.Habit
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -26,7 +28,7 @@ private const val ARG_PARAM2 = "param2"
  */
 class Dashboard : Fragment() {
     private lateinit var viewModel: HabitViewModel
-    private val habitListAdapter  = HabitListAdapter(arrayListOf())
+    private val habitListAdapter = HabitListAdapter(arrayListOf<Habit>())
     private lateinit var binding: FragmentDashboardBinding
 
     private var param1: String? = null
@@ -56,7 +58,6 @@ class Dashboard : Fragment() {
 
         binding.recViewHabits.layoutManager = LinearLayoutManager(context)
         binding.recViewHabits.adapter = habitListAdapter
-
         observeViewModel()
 
         binding.btnAddHabit.setOnClickListener {

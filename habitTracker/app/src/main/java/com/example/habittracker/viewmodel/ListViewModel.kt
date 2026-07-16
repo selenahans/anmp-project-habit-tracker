@@ -2,18 +2,20 @@ package com.example.habittracker.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.habittracker.model.Model
+import com.example.habittracker.model.Habit
 
-class ListViewModel : ViewModel(){
-    val habitsLD = MutableLiveData<ArrayList<Model.Habit>>()
+class ListViewModel : ViewModel() {
+
+    val habitsLD = MutableLiveData<ArrayList<Habit>>()
     val habitLoadErrorLD = MutableLiveData<Boolean>()
     val loadingLD = MutableLiveData<Boolean>()
+
     fun refresh() {
         loadingLD.value = true
         habitLoadErrorLD.value = false
 
         habitsLD.value = arrayListOf(
-            Model.Habit(
+            Habit(
                 "Drink Water",
                 "Stay hydrated throughout the day",
                 8,
@@ -21,7 +23,7 @@ class ListViewModel : ViewModel(){
                 "glasses",
                 "Water"
             ),
-            Model.Habit(
+            Habit(
                 "Morning Jogging",
                 "Burn calories and stay fit",
                 30,
@@ -29,7 +31,7 @@ class ListViewModel : ViewModel(){
                 "minutes",
                 "Run"
             ),
-            Model.Habit(
+            Habit(
                 "Reading Book",
                 "Improve knowledge and focus",
                 20,
@@ -39,8 +41,6 @@ class ListViewModel : ViewModel(){
             )
         )
 
-        habitLoadErrorLD.value = false
         loadingLD.value = false
     }
-
 }
