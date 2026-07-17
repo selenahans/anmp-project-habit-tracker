@@ -19,6 +19,7 @@ class Dashboard : Fragment(), HabitClickListener {
     private lateinit var habitListAdapter: HabitListAdapter
     private lateinit var binding: FragmentDashboardBinding
 
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -125,9 +126,8 @@ class Dashboard : Fragment(), HabitClickListener {
     override fun onTitleClick(habit: Habit) {
 
         val action =
-            DashboardDirections.actionDashboardToEditHabit(
-                habit.uuid
-            )
+            DashboardDirections
+                .actionDashboardToEditHabit(habit.uuid)
 
         findNavController().navigate(action)
     }

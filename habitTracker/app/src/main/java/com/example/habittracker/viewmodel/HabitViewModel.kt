@@ -18,6 +18,13 @@ class HabitViewModel(
     val habitsLD = MutableLiveData<ArrayList<Habit>>()
     val habitLD = MutableLiveData<Habit>()
 
+    val habitName = MutableLiveData<String>()
+    val habitDescription = MutableLiveData<String>()
+    val habitGoal = MutableLiveData<String>()
+    val habitUnit = MutableLiveData<String>()
+
+    val selectedIcon = MutableLiveData<String>()
+
     val habitLoadErrorLD = MutableLiveData<Boolean>()
     val loadingLD = MutableLiveData<Boolean>()
 
@@ -47,13 +54,21 @@ class HabitViewModel(
     fun fetch(id: Int) {
 
         launch {
+
             val dao = HabitDatabase
                 .getInstance(getApplication())
                 .habitDao()
 
-            habitLD.postValue(
-                dao.selectHabit(id)
-            )
+            val habit = dao.selectHabit(id)
+
+            habitLD.postValue(habit)
+
+            habitName.postValue(habit.name)
+            habitDescription.postValue(habit.description)
+            habitGoal.postValue(habit.goal.toString())
+            habitUnit.postValue(habit.unit)
+            selectedIcon.postValue(habit.icon)
+
         }
     }
 
