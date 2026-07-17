@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -8,24 +9,47 @@
     <fragment
         android:id="@+id/login"
         android:name="com.example.habittracker.view.Login"
-        android:label="fragment_login"
-        tools:layout="@layout/fragment_login" >
+        android:label="Login"
+        tools:layout="@layout/fragment_login">
+
         <action
             android:id="@+id/action_login_to_dashboard"
             app:destination="@id/dashboard" />
+
     </fragment>
+
     <fragment
         android:id="@+id/dashboard"
         android:name="com.example.habittracker.view.Dashboard"
-        android:label="fragment_dashboard"
-        tools:layout="@layout/fragment_dashboard" >
+        android:label="Dashboard"
+        tools:layout="@layout/fragment_dashboard">
+
         <action
-            android:id="@+id/action_dashboard_to_createHabit"
-            app:destination="@id/createHabit" />
+            android:id="@+id/action_dashboard_to_create_habit"
+            app:destination="@id/create_habit" />
+
+        <action
+            android:id="@+id/action_dashboard_to_edit_habit"
+            app:destination="@id/edit_habit" />
+
     </fragment>
+
     <fragment
-        android:id="@+id/createHabit"
+        android:id="@+id/create_habit"
         android:name="com.example.habittracker.view.CreateHabit"
-        android:label="fragment_create_habit"
+        android:label="Create Habit"
         tools:layout="@layout/fragment_create_habit" />
+
+    <fragment
+        android:id="@+id/edit_habit"
+        android:name="com.example.habittracker.view.EditHabit"
+        android:label="Edit Habit"
+        tools:layout="@layout/fragment_edit_habit">
+
+        <argument
+            android:name="habitId"
+            app:argType="integer" />
+
+    </fragment>
+
 </navigation>

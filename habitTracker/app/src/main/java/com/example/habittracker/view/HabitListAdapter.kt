@@ -1,16 +1,21 @@
 package com.example.habittracker.view
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.habittracker.R
 import com.example.habittracker.databinding.HabitListItemBinding
 import com.example.habittracker.model.Habit
-import com.example.habittracker.viewmodel.HabitViewModel
+
+interface HabitClickListener {
+    fun onTitleClick(habit: Habit)
+    fun onPlusClick(habit: Habit)
+    fun onMinusClick(habit: Habit)
+}
 
 class HabitListAdapter(
     private val habitList: ArrayList<Habit>,
-    private val viewModel: HabitViewModel
+    private val listener: HabitClickListener
 ) : RecyclerView.Adapter<HabitListAdapter.HabitViewHolder>() {
 
     override fun onCreateViewHolder(
@@ -27,59 +32,33 @@ class HabitListAdapter(
         return HabitViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: HabitViewHolder, position: Int) {
-
+    override fun onBindViewHolder(
+        holder: HabitViewHolder,
+        position: Int
+    ) {
         val habit = habitList[position]
 
-        with(holder.binding) {
+        holder.binding.habit = habit
+        holder.binding.listener = listener
 
-            txtTitle.text = habit.name
-            txtDesc.text = habit.description
+        val imageId = holder.itemView.context.resources.getIdentifier(
+            habit.icon.lowercase(),
+            "drawable",
+            holder.itemView.context.packageName
+        )
 
-            progressBar.max = habit.goal
-            progressBar.progress = habit.currentProgress
-
-            txtProgressRatio.text =
-                "${habit.currentProgress} / ${habit.goal} ${habit.unit}"
-
-            val image = holder.itemView.context.resources.getIdentifier(
-                habit.icon.lowercase(),
-                "drawable",
-                holder.itemView.context.packageName
-            )
-
-            imageView.setImageResource(image)
-
-            btnPlus.setOnClickListener {
-                if (habit.currentProgress < habit.goal) {
-                    habit.currentProgress++
-                    viewModel.updateHabit(
-                        holder.itemView.context, habit
-                    )
-                }
-
-            }
-
-            btnMinus.setOnClickListener {
-                if (habit.currentProgress > 0) {
-                    habit.currentProgress--
-                    viewModel.updateHabit(
-                        holder.itemView.context, habit
-                    )
-                }
-            }
-
-            if (habit.currentProgress == habit.goal) {
-                txtStatus.text = "Completed"
-                txtStatus.setBackgroundColor(Color.parseColor("#BDFFB6"))
-            } else {
-                txtStatus.text = "In Progress"
-                txtStatus.setBackgroundColor(Color.parseColor("#E8E7E7"))
-            }
+        if (imageId != 0) {
+            holder.binding.imgHabit.setImageResource(imageId)
+        } else {
+            holder.binding.imgHabit.setImageResource(R.drawable.exercise)
         }
+
+        holder.binding.executePendingBindings()
     }
 
-    override fun getItemCount(): Int = habitList.size
+    override fun getItemCount(): Int {
+        return habitList.size
+    }
 
     fun updateHabitList(newHabitList: ArrayList<Habit>) {
         habitList.clear()

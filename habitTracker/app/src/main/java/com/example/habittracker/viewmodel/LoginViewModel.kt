@@ -13,7 +13,9 @@ class LoginViewModel : ViewModel() {
         password: String
     ): Boolean {
 
-        val dao = HabitDatabase.getInstance(context).userDao()
+        val dao = HabitDatabase
+            .getInstance(context)
+            .userDao()
 
         if (dao.countUser() == 0) {
             dao.insertAll(
@@ -26,35 +28,32 @@ class LoginViewModel : ViewModel() {
 
         val user = dao.login(username, password)
 
-        return if (user != null) {
-
-            val pref = context.getSharedPreferences(
-                "session",
-                Context.MODE_PRIVATE
-            )
-
-            pref.edit()
-                .putBoolean("isLogin", true)
-                .putString("username", user.username)
-                .putInt("userId", user.uuid)
-                .apply()
-
-            true
-
-        } else {
-
-            false
-
+        if (user == null) {
+            return false
         }
-    }
-
-    fun logout(context: Context) {
 
         val pref = context.getSharedPreferences(
             "session",
             Context.MODE_PRIVATE
         )
 
-        pref.edit().clear().apply()
+        pref.edit()
+            .putBoolean("isLogin", true)
+            .putString("username", user.username)
+            .putInt("userId", user.uuid)
+            .apply()
+
+        return true
+    }
+
+    fun logout(context: Context) {
+        val pref = context.getSharedPreferences(
+            "session",
+            Context.MODE_PRIVATE
+        )
+
+        pref.edit()
+            .clear()
+            .apply()
     }
 }

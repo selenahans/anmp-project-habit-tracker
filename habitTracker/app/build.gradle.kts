@@ -1,17 +1,21 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     id("androidx.navigation.safeargs.kotlin")
     id("kotlin-kapt")
-
 }
 
 android {
     namespace = "com.example.habittracker"
     compileSdk = 36
+
     buildFeatures {
         viewBinding = true
+        dataBinding = true
     }
+
     defaultConfig {
         applicationId = "com.example.habittracker"
         minSdk = 24
@@ -31,17 +35,20 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    kotlinOptions {
-        jvmTarget = "11"
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_11)
     }
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -49,24 +56,20 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.cardview)
+    implementation(libs.androidx.fragment)
+    implementation(libs.androidx.swiperefreshlayout)
+
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
+    implementation("com.google.code.gson:gson:2.14.0")
+
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
-    implementation(libs.androidx.fragment)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    implementation(libs.coroutinesCore)
-    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.2.0")
-    implementation("com.google.code.gson:gson:2.10.1")
-    implementation("androidx.navigation:navigation-fragment-ktx:2.5.3")
-    implementation("androidx.navigation:navigation-ui-ktx:2.5.3")
-    implementation("androidx.room:room-runtime:2.5.1")
-    implementation("androidx.room:room-ktx:2.5.1")
-    kapt("androidx.room:room-compiler:2.5.1")
-    implementation(libs.navigation.fragment.ktx)
-    implementation(libs.navigation.ui.ktx)
+
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
     kapt(libs.room.compiler)
 
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
 }
