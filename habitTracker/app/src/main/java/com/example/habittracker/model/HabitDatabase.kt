@@ -6,12 +6,8 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 @Database(
-    entities = [
-        Habit::class,
-        User::class
-    ],
-    version = 1,
-    exportSchema = false
+    entities = [Habit::class, User::class],
+    version = 1
 )
 abstract class HabitDatabase : RoomDatabase() {
 
@@ -31,9 +27,7 @@ abstract class HabitDatabase : RoomDatabase() {
                     context.applicationContext,
                     HabitDatabase::class.java,
                     "habit_tracker_database"
-                )
-                    .allowMainThreadQueries()
-                    .build()
+                ).build()
 
                 INSTANCE = instance
 

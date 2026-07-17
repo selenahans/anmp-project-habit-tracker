@@ -56,7 +56,7 @@ class Dashboard : Fragment(), HabitClickListener {
 
         observeViewModel()
 
-        viewModel.refresh(requireContext())
+        viewModel.refresh()
 
         binding.btnAddHabit.setOnClickListener {
             val action =
@@ -66,7 +66,7 @@ class Dashboard : Fragment(), HabitClickListener {
         }
 
         binding.refreshLayout.setOnRefreshListener {
-            viewModel.refresh(requireContext())
+            viewModel.refresh()
             binding.refreshLayout.isRefreshing = false
         }
     }
@@ -109,26 +109,16 @@ class Dashboard : Fragment(), HabitClickListener {
     }
 
     override fun onPlusClick(habit: Habit) {
-
         if (habit.currentProgress < habit.goal) {
             habit.currentProgress++
-
-            viewModel.updateHabit(
-                requireContext(),
-                habit
-            )
+            viewModel.updateHabit(habit)
         }
     }
 
     override fun onMinusClick(habit: Habit) {
-
         if (habit.currentProgress > 0) {
             habit.currentProgress--
-
-            viewModel.updateHabit(
-                requireContext(),
-                habit
-            )
+            viewModel.updateHabit(habit)
         }
     }
 

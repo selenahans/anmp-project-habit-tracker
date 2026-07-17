@@ -1,52 +1,55 @@
 package com.example.habittracker.view
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.habittracker.R
+import androidx.navigation.fragment.findNavController
 import com.example.habittracker.databinding.FragmentCreateHabitBinding
 import com.example.habittracker.model.Habit
 import com.example.habittracker.viewmodel.HabitViewModel
-import androidx.navigation.fragment.findNavController
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [CreateHabit.newInstance] factory method to
- * create an instance of this fragment.
- */
 class CreateHabit : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-    private lateinit var binding: FragmentCreateHabitBinding
-    private lateinit var habitViewModel: HabitViewModel
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+    private lateinit var binding: FragmentCreateHabitBinding
+    private lateinit var viewModel: HabitViewModel
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+
+        binding = FragmentCreateHabitBinding.inflate(
+            inflater,
+            container,
+            false
+        )
+
+        return binding.root
+    }
+
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?
+    ) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewModel =
+            ViewModelProvider(requireActivity())[HabitViewModel::class.java]
+
+        setupSpinner()
+
+        binding.btnCreateHabit.setOnClickListener {
+            createHabit()
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        binding = FragmentCreateHabitBinding.inflate(inflater, container, false)
-
-        habitViewModel = ViewModelProvider(requireActivity())[HabitViewModel::class.java]
+    private fun setupSpinner() {
 
         val icons = arrayOf(
             "Biking",
@@ -57,68 +60,72 @@ class CreateHabit : Fragment() {
             "Music",
             "Protein",
             "Run",
-            "Salad",
-            "Water"
+            "Salad"
         )
+
         val iconAdapter = ArrayAdapter(
             requireContext(),
             android.R.layout.simple_spinner_item,
             icons
         )
-        iconAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+        iconAdapter.setDropDownViewResource(
+            android.R.layout.simple_spinner_dropdown_item
+        )
+
         binding.spinner2.adapter = iconAdapter
-
-        binding.btnCreateHabit.setOnClickListener {
-            binding.btnCreateHabit.isEnabled = false
-            createHabit()
-        }
-
-        return binding.root
     }
+
     private fun createHabit() {
-        val name = binding.txtHabitName.text.toString()
-        val description = binding.txtDescription.text.toString()
-        val goals = binding.txtGoal.text.toString().toIntOrNull()
-        val unit = binding.txtUnit.text.toString()
-        val selectedIcon = binding.spinner2.selectedItem as? String
 
-        if (name.isEmpty() || description.isEmpty() || goals == null || selectedIcon == null) {
-            Toast.makeText(context, "Please fill in all fields", Toast.LENGTH_SHORT).show()
-            binding.btnCreateHabit.isEnabled = true
-        } else {
-            val newHabit = Habit(
-                name,
-                description,
-                goals,
-                0,
-                unit,
-                selectedIcon
-            )
-            habitViewModel.saveHabit(
+        val name =
+            binding.txtHabitName.text.toString().trim()
+
+        val description =
+            binding.txtDescription.text.toString().trim()
+
+        val goal =
+            binding.txtGoal.text.toString().toIntOrNull()
+
+        val unit =
+            binding.txtUnit.text.toString().trim()
+
+        val selectedIcon =
+            binding.spinner2.selectedItem.toString().lowercase()
+
+        if (
+            name.isEmpty() ||
+            description.isEmpty() ||
+            goal == null ||
+            goal <= 0 ||
+            unit.isEmpty()
+        ) {
+            Toast.makeText(
                 requireContext(),
-                newHabit
-            )
-            Toast.makeText(context, "Habit Created", Toast.LENGTH_SHORT).show()
-            findNavController().popBackStack()
+                "Please fill in all fields correctly",
+                Toast.LENGTH_SHORT
+            ).show()
+
+            return
         }
-    }
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment CreateHabit.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            CreateHabit().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+
+        val habit = Habit(
+            name = name,
+            description = description,
+            goal = goal,
+            currentProgress = 0,
+            unit = unit,
+            icon = selectedIcon
+        )
+
+        viewModel.saveHabit(habit)
+
+        Toast.makeText(
+            requireContext(),
+            "Habit Created",
+            Toast.LENGTH_SHORT
+        ).show()
+
+        findNavController().popBackStack()
     }
 }

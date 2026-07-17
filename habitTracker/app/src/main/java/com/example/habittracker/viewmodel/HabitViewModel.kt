@@ -1,48 +1,94 @@
 package com.example.habittracker.viewmodel
 
-import android.content.Context
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.example.habittracker.model.Habit
 import com.example.habittracker.model.HabitDatabase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlin.coroutines.CoroutineContext
 
-class HabitViewModel : ViewModel() {
+class HabitViewModel(
+    application: Application
+) : AndroidViewModel(application), CoroutineScope {
 
     val habitsLD = MutableLiveData<ArrayList<Habit>>()
+    val habitLD = MutableLiveData<Habit>()
 
     val habitLoadErrorLD = MutableLiveData<Boolean>()
-
     val loadingLD = MutableLiveData<Boolean>()
 
-    fun refresh(context: Context) {
+    private val job = Job()
+
+    override val coroutineContext: CoroutineContext
+        get() = job + Dispatchers.IO
+
+    fun refresh() {
 
         loadingLD.value = true
 
-        val dao = HabitDatabase
-            .getInstance(context)
-            .habitDao()
+        launch {
+            val dao = HabitDatabase
+                .getInstance(getApplication())
+                .habitDao()
 
-        habitsLD.value =
-            ArrayList(dao.selectAllHabit())
+            habitsLD.postValue(
+                ArrayList(dao.selectAllHabit())
+            )
 
-        loadingLD.value = false
-
-        habitLoadErrorLD.value = false
+            habitLoadErrorLD.postValue(false)
+            loadingLD.postValue(false)
+        }
     }
 
-    fun saveHabit(
-        context: Context,
-        habit: Habit
-    ) {
-        HabitDatabase.getInstance(context).habitDao().insertAll(habit)
-        refresh(context)
+    fun fetch(id: Int) {
+
+        launch {
+            val dao = HabitDatabase
+                .getInstance(getApplication())
+                .habitDao()
+
+            habitLD.postValue(
+                dao.selectHabit(id)
+            )
+        }
     }
 
-    fun updateHabit(
-        context: Context,
-        habit: Habit
-    ) {
-        HabitDatabase.getInstance(context).habitDao().updateHabit(habit)
-        refresh(context)
+    fun saveHabit(habit: Habit) {
+
+        launch {
+            val dao = HabitDatabase
+                .getInstance(getApplication())
+                .habitDao()
+
+            dao.insertAll(habit)
+
+            habitsLD.postValue(
+                ArrayList(dao.selectAllHabit())
+            )
+        }
+    }
+
+    fun updateHabit(habit: Habit) {
+
+        launch {
+            val dao = HabitDatabase
+                .getInstance(getApplication())
+                .habitDao()
+
+            dao.updateHabit(habit)
+
+            habitsLD.postValue(
+                ArrayList(dao.selectAllHabit())
+            )
+        }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        job.cancel()
     }
 }

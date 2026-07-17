@@ -41,19 +41,20 @@ class HabitListAdapter(
         holder.binding.habit = habit
         holder.binding.listener = listener
 
-        val imageId = holder.itemView.context.resources.getIdentifier(
-            habit.icon.lowercase(),
-            "drawable",
-            holder.itemView.context.packageName
-        )
-
-        if (imageId != 0) {
-            holder.binding.imgHabit.setImageResource(imageId)
-        } else {
-            holder.binding.imgHabit.setImageResource(R.drawable.exercise)
+        val imageId = when (habit.icon.lowercase()) {
+            "biking" -> R.drawable.biking
+            "books" -> R.drawable.books
+            "exercise" -> R.drawable.exercise
+            "laptop" -> R.drawable.laptop
+            "meditate" -> R.drawable.meditate
+            "music" -> R.drawable.music
+            "protein" -> R.drawable.protein
+            "run" -> R.drawable.run
+            "salad" -> R.drawable.salad
+            else -> R.drawable.exercise
         }
 
-        holder.binding.executePendingBindings()
+        holder.binding.imgHabit.setImageResource(imageId)
     }
 
     override fun getItemCount(): Int {
