@@ -32,10 +32,6 @@ abstract class HabitDatabase : RoomDatabase() {
                     HabitDatabase::class.java,
                     "habit_tracker_database"
                 )
-                    /*
-                     * Sementara diperlukan karena fungsi DAO Anda
-                     * belum menggunakan suspend/coroutine.
-                     */
                     .allowMainThreadQueries()
                     .build()
 
