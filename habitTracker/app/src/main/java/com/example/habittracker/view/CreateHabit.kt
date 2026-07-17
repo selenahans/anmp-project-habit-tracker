@@ -94,7 +94,10 @@ class CreateHabit : Fragment() {
                 unit,
                 selectedIcon
             )
-            habitViewModel.saveHabit(newHabit)
+            habitViewModel.saveHabit(
+                requireContext(),
+                newHabit
+            )
             Toast.makeText(context, "Habit Created", Toast.LENGTH_SHORT).show()
             findNavController().popBackStack()
         }

@@ -13,9 +13,8 @@ class LoginViewModel : ViewModel() {
         password: String
     ): Boolean {
 
-        val dao = HabitDatabase(context).userDao()
+        val dao = HabitDatabase.getInstance(context).userDao()
 
-        // Membuat akun default jika belum ada user
         if (dao.countUser() == 0) {
             dao.insertAll(
                 User(

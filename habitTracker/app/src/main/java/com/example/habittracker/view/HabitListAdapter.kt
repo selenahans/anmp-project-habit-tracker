@@ -6,9 +6,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.habittracker.databinding.HabitListItemBinding
 import com.example.habittracker.model.Habit
+import com.example.habittracker.viewmodel.HabitViewModel
 
 class HabitListAdapter(
-    private val habitList: ArrayList<Habit>
+    private val habitList: ArrayList<Habit>,
+    private val viewModel: HabitViewModel
 ) : RecyclerView.Adapter<HabitListAdapter.HabitViewHolder>() {
 
     override fun onCreateViewHolder(
@@ -49,21 +51,22 @@ class HabitListAdapter(
             imageView.setImageResource(image)
 
             btnPlus.setOnClickListener {
-
                 if (habit.currentProgress < habit.goal) {
                     habit.currentProgress++
-                    notifyItemChanged(position)
+                    viewModel.updateHabit(
+                        holder.itemView.context, habit
+                    )
                 }
 
             }
 
             btnMinus.setOnClickListener {
-
                 if (habit.currentProgress > 0) {
                     habit.currentProgress--
-                    notifyItemChanged(position)
+                    viewModel.updateHabit(
+                        holder.itemView.context, habit
+                    )
                 }
-
             }
 
             if (habit.currentProgress == habit.goal) {

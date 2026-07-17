@@ -28,7 +28,7 @@ private const val ARG_PARAM2 = "param2"
  */
 class Dashboard : Fragment() {
     private lateinit var viewModel: HabitViewModel
-    private val habitListAdapter = HabitListAdapter(arrayListOf<Habit>())
+    private lateinit var habitListAdapter: HabitListAdapter
     private lateinit var binding: FragmentDashboardBinding
 
     private var param1: String? = null
@@ -54,7 +54,11 @@ class Dashboard : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel = ViewModelProvider(requireActivity())[HabitViewModel::class.java]
-        viewModel.refresh()
+        habitListAdapter =
+            HabitListAdapter(
+                arrayListOf(), viewModel
+            )
+        viewModel.refresh(requireContext())
 
         binding.recViewHabits.layoutManager = LinearLayoutManager(context)
         binding.recViewHabits.adapter = habitListAdapter
